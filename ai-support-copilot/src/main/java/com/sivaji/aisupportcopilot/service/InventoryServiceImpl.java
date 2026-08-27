@@ -78,6 +78,33 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public Inventory releaseStock(
+            UUID productId,
+            int quantity) {
+
+        if (quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "Quantity must be greater than zero"
+            );
+        }
+
+        Inventory inventory = inventoryRepository
+                .findByProductId(productId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Inventory not found for product: "
+                                        + productId
+                        )
+                );
+
+        inventory.setAvailableQuantity(
+                inventory.getAvailableQuantity() + quantity
+        );
+
+        return inventoryRepository.save(inventory);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Inventory getInventory(UUID productId) {
 

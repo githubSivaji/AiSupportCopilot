@@ -10,5 +10,6 @@ public interface InventoryService  {
 
     Inventory reserveStock(UUID productId, int quantity);
 
+    Inventory releaseStock(UUID productId, int quantity);
     Inventory getInventory(UUID productId);
 }
