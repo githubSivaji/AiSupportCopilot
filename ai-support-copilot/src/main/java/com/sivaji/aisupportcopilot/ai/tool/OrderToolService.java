@@ -1,5 +1,6 @@
 package com.sivaji.aisupportcopilot.ai.tool;
 
+import com.sivaji.aisupportcopilot.dto.OrderToolResponse;
 import com.sivaji.aisupportcopilot.entity.Order;
 import com.sivaji.aisupportcopilot.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,35 +17,40 @@ public class OrderToolService {
     private final OrderRepository orderRepository;
 
     @Tool(
-            name = "getOrderStatus",
-            description = "Get the status of an order belonging to the authenticated customer"
+            description = "Get the status and total amount of an order belonging to the current user"
     )
-    public String getOrderStatus(
-            String orderId, ToolContext toolContext) {
-
-        UUID orderUUID;
-        try {
-            orderUUID = UUID.fromString(orderId);
-        } catch (IllegalArgumentException e) {
-            return "Invalid order ID format. Please provide a valid order ID.";
-        }
+    public OrderToolResponse getOrderStatus(
+            UUID orderId,
+            ToolContext toolContext) {
 
         UUID userId = (UUID) toolContext
                 .getContext()
                 .get("userId");
 
-        Order order = orderRepository.findById(orderUUID)
+        Order order = orderRepository
+                .findById(orderId)
                 .orElse(null);
 
         if (order == null) {
-            return "Order not found.";
+            return new OrderToolResponse(
+                    orderId,
+                    "NOT_FOUND",
+                    null
+            );
         }
 
-        // Security: customer can only access own order
         if (!order.getUser().getId().equals(userId)) {
-            return "You are not authorized to access this order.";
+            return new OrderToolResponse(
+                    orderId,
+                    "UNAUTHORIZED",
+                    null
+            );
         }
 
-        return "Order status: " + order.getStatus();
+        return new OrderToolResponse(
+                order.getId(),
+                order.getStatus().name(),
+                order.getTotalAmount()
+        );
     }
 }

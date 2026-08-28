@@ -2,8 +2,10 @@ package com.sivaji.aisupportcopilot.service;
 
 import com.sivaji.aisupportcopilot.dto.ProductRequest;
 import com.sivaji.aisupportcopilot.dto.ProductResponse;
+import com.sivaji.aisupportcopilot.entity.Inventory;
 import com.sivaji.aisupportcopilot.entity.Product;
 
+import com.sivaji.aisupportcopilot.repository.InventoryRepository;
 import com.sivaji.aisupportcopilot.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     private final ProductRepository productRepository;
-
+    private final InventoryRepository inventoryRepository;
     @Override
     public ProductResponse createProduct(ProductRequest request) {
 
@@ -32,6 +34,13 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         Product savedProduct = productRepository.save(product);
+        Inventory inventory = Inventory.builder()
+                .productId(savedProduct.getId())
+                .availableQuantity(0)
+                .build();
+
+        inventoryRepository.save(inventory);
+
 
         return ProductResponse.from(savedProduct);
     }

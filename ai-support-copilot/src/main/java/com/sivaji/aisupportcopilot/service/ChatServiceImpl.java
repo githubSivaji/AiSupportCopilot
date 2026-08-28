@@ -85,12 +85,10 @@ public class ChatServiceImpl implements ChatService {
         StringBuilder prompt = new StringBuilder();
 
         prompt.append("""
-                You are an AI customer support assistant.
-                Be helpful, concise, and professional.
+        Conversation history:
 
-                Conversation history:
+        """);
 
-                """);
 
         for (Message message : messages) {
 
