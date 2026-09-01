@@ -1,5 +1,6 @@
 package com.sivaji.aisupportcopilot.controller;
 
+import com.sivaji.aisupportcopilot.dto.SearchResult;
 import com.sivaji.aisupportcopilot.entity.DocumentChunk;
 import com.sivaji.aisupportcopilot.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,15 @@ public class SearchController {
 
         return ResponseEntity.ok(
                 searchService.searchBySemantic(query, topK)
+        );
+    }
+    @GetMapping("/hybrid")
+    public ResponseEntity<List<SearchResult>> hybridSearch(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "5") int topK) {
+
+        return ResponseEntity.ok(
+                searchService.hybridSearch(query, topK)
         );
     }
 }
