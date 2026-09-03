@@ -1,11 +1,9 @@
 package com.sivaji.aisupportcopilot.ai.orchestrator;
 
-
-import com.sivaji.aisupportcopilot.ai.orchestrator.OrchestratorService;
-
+import com.sivaji.aisupportcopilot.entity.User;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,10 +15,11 @@ public class OrchestratorController {
 
     @GetMapping("/ask")
     public ResponseEntity<String> ask(
-            @RequestParam String message) {
+            @RequestParam String message,
+            @AuthenticationPrincipal User user) {
 
         return ResponseEntity.ok(
-                orchestratorService.process(message)
+                orchestratorService.process(message, user.getId())
         );
     }
 }
