@@ -1,6 +1,3 @@
-Absolutely. Based on the project we've built so far, here's a **GitHub-ready `README.md`** that presents it as a serious **Java/Spring Boot backend + GenAI project**, while clearly separating completed and upcoming features.
-
-You can create a file named **`README.md`** in the project root and paste this in:
 
 ````markdown
 # AI Support Copilot
